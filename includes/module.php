@@ -7,11 +7,13 @@
 	session_start();
 
 	$con = new mysqli(DB_SERVER,DB_USERNAME,DB_PASSWORD,DB_DATABASE);
-	if ($con->connect_error) {
+	if ($con->connect_error) 
+	{
 	    die("Connection failed: " . $con->connect_error);
 	}
-
-	function passwordEncrypt($string) {
+	
+	function passwordEncrypt($string) 
+	{
 		$key = 'digal domaub pioquinto';
 		$iv = mcrypt_create_iv(
 	    mcrypt_get_iv_size(MCRYPT_RIJNDAEL_128, MCRYPT_MODE_CBC),
@@ -26,11 +28,12 @@
 	        MCRYPT_MODE_CBC,
 	        $iv
 	    ));
-
+		
 		return $encrypted;
 	}
 
-	function passwordDecrypt($string) {
+	function passwordDecrypt($string) 
+	{
 		$key = 'digal domaub pioquinto';
 		$data = base64_decode($string);
 		$iv = substr($data, 0, mcrypt_get_iv_size(MCRYPT_RIJNDAEL_128, MCRYPT_MODE_CBC));
@@ -48,23 +51,26 @@
 		return $decrypted;
 	}
 
-	function displayMoney($double) {
+	function displayMoney($double) 
+	{
 		return number_format($double, 2, ".", ",");
 	}
 
-	function displayDuration($start, $end) {
-		$start = date_format(date_create($start), 'm/d/Y');
-		$end = date_format(date_create($end), 'm/d/Y');
+	function displayDuration($start, $end) 
+	{
+		$start 					= date_format(date_create($start), 'm/d/Y');
+		$end 					= date_format(date_create($end), 'm/d/Y');
 
 		return $start . ' - ' . $end;
 	}
 
-	function displayFilename($dir, $file) {
-		return preg_replace('/^'
-			. preg_quote($dir, '/') . '/', '', $file);
+	function displayFilename($dir, $file) 
+	{
+		return preg_replace('/^' . preg_quote($dir, '/') . '/', '', $file);
 	}
 
-	function tempID($size) {
+	function tempID($size) 
+	{
 		$alpha_key = '';
 		$keys = range('A', 'Z');
 

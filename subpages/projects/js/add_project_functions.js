@@ -19,7 +19,8 @@ $('#project_form').ajaxForm({
     /* complete call back */
     complete: function(data) {
       //$('#upload_progress').hide();
-      	if(data.responseJSON.success) {
+      	if(data.responseJSON.success)
+      	{
       		var action = (edit_or_draft==1) ? 'updated.': 'added.';
   			
   			alert('Project successfully '+action);
@@ -27,13 +28,14 @@ $('#project_form').ajaxForm({
       		load_project();
       		//alert(data.responseJSON.items);
       	}
-      	else {
+      	else
+      	{
       		alert(data.responseJSON.error);
       	}
     }
 });
 
-$('#attachment_form').ajaxForm( {
+$('#attachment_form').ajaxForm({
 
     /* set data type json */
     dataType:'json',
@@ -59,6 +61,7 @@ $('#attachment_form').ajaxForm( {
       $('#upload_progress').hide();
       //alert(data.responseJSON.count);
     }
+
 });
 
 $('#attach_files').change(function()
@@ -80,7 +83,8 @@ $('#attached_files_cont').append($('<div>a').load('/subpages/projects/load_alrea
 function removeSelectedItem(obj) {
 	var ans = confirm("Remove uploaded file?");
 
-	if(ans) {
+	if(ans)
+	{
 		var filename	= $(obj).attr('name');
 
 		$(obj).closest(".selected-row").remove();
@@ -138,7 +142,7 @@ function removeSelectedRow(obj)
 	alert(id);
 }
 
-function add_project(number) {
+function add_project(number){
 	var	foremen_ids	= foremen.join();
 	var	worker_ids	= workers.join()
 	var mat_ids 	= items.join();
@@ -146,7 +150,8 @@ function add_project(number) {
 	var qtys 		= "";		
 	var x 			= 0;
 	
-	$('input[name*="quantities"]').each(function () {
+	$('input[name*="quantities"]').each(function ()
+	{
 		if(x != 0)
 			mat_qty += ",";
 		mat_qty+=$(this).val();

@@ -1,47 +1,55 @@
 <?php
-	include("../../includes/get_payrolls.php");
+	include("../../includes/get_projects.php");
 
-	$status = $_GET['status'];
-	$dates = explode(" - ", $_GET['daterange']);
-	$pages = 1;
+	$key 			= $_GET['key'];
+	$status 		= $_GET['status'];
+	$dates			= explode(" - ", $_GET['daterange']);
+	$pages 			= 1;
 
-	$page = $_GET['page'];
-	$limit = $_GET['limit'];
-	$offset = ($page - 1) * $limit;
+	$page 			= $_GET['page'];
+	$limit 			= $_GET['limit'];
+	$offset 		= ($page - 1)*$limit;
 
-	$range = ($dates[0] == $dates[1]) ? "" : $_GET['daterange'];
+	$range 			= ($dates[0] == $dates[1]) ? "" : $_GET['daterange'];
 
-	//$dateRange = "", $status = "", $limit, $offset
-	$getPayrolls = getPayrollList($range, $status, $limit, $offset);
+	//$searchKey = "", $dateRange = "", $status = "", $limit, $offset
+	$getProjects 	= getProjectList($key, $range, $status, $limit, $offset);
 
-	$getPayrolls->bind_result($payroll_id, 
-		$project_id, 
-		$payroll_start,
-		$payroll_end,
-		$payroll_status,
-		$project_name);
+	$getProjects 	->bind_result(	$project_id, 
+									$project_name, 
+									$employee_count, 
+									$project_start, 
+									$project_end, 
+									$project_estbudget, 
+									$project_status);
 	
 ?>
 <div class="row">
 	<div class="col-xs-12">
-		<?php while($getPayrolls->fetch()){ ?>
-		<div class="row project-row trans300 <?= $payroll_status; ?>">
+		<?php while($getProjects->fetch()){ ?>
+		<div class="row project-row trans300 <?= $project_status; ?>">
 			<div class="col-xs-6 col-md-1 align-right pull-right">
 				<span><i class="fa fa-gear"></i></span>
 			</div>
-			<span onclick="load_payroll_profile(<?php echo $payroll_id; ?>);">
+			<span onclick="load_payroll_profile(<?php echo $project_id; ?>);">
 				<div class="col-xs-6 col-md-1">
-					<span><?php printf("#%s", $payroll_id); ?></span>
+					<span><?php printf("#%s", $project_id); ?></span>
 				</div>
-				<div class="col-xs-6 col-md-1">
-					<span><?php printf("#%s", $project_name); ?></span>
+				<div class="col-xs-10 col-md-5">
+					<span><?php echo $project_name; ?></span>
+				</div>
+				<div class="col-xs-2 col-md-1 align-right">
+					<span><?php echo $employee_count; ?> <i class="fa fa-id-card"></i></span>
 				</div>
 				<div class="col-xs-6 col-md-2">
-					<span><?php printf("%s - %s", date("m/d/y", strtotime($payroll_start)),date("m/d/y", strtotime($payroll_end))); ?></span>
+					<span><?php printf("%s - %s", date("m/d/y", strtotime($project_start)),date("m/d/y", strtotime($project_end))); ?></span>
+				</div>
+				<div class="col-xs-6 col-md-2 align-right">
+					<span>&#8369; <?php echo displayMoney($project_estbudget); ?></span>
 				</div>
 			</span>
 		</div>
-		<?php } $getPayrolls->close(); ?>
+		<?php } $getProjects->close(); ?>
 	</div>
 </div>
 <div class="row mt30">

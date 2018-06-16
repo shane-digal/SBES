@@ -15,10 +15,9 @@
 <script src="resources/theme/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
 <script src="resources/theme/dist/js/adminlte.min.js"></script>
 
+
 <script src="resources/theme/bower_components/moment/min/moment.min.js"></script>
 <script src="resources/theme/bower_components/bootstrap-daterangepicker/daterangepicker.js"></script>
-<script src="resources/theme/bower_components/bootstrap-timepicker/js/bootstrap-timepicker.js"></script>
-<script src="resources/theme/bower_components/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
 
 <script src="resources/js/gen-script.js"></script>
 </body>

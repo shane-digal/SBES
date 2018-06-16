@@ -6,18 +6,27 @@
 
 	$max_size       = 1024*2000;
 	$extensions     = array('jpeg', 'jpg', 'png', 'doc', 'docx', 'pdf');
-	$dir            = '../../uploads/projects/temp/';
+	$project_id 	= $_POST['project_id'];
+
+	$dir            = '../../uploads/projects/';
 
 	$data['count']  = 0;
 	$file_num       = 1;
 
 	if ($_SERVER['REQUEST_METHOD'] == 'POST' and isset($_FILES['files']))
 	{
-
-		if(!isset($_SESSION['tmp_project_id']) || $_SESSION['tmp_project_id'] != "")
-			$_SESSION['tmp_project_id'] = tempID(10);
-
-		$dir .= $_SESSION['tmp_project_id']. '_';
+		if($project_id == 0)
+		{
+			if(!isset($_SESSION['tmp_project_id']) || $_SESSION['tmp_project_id'] != "")
+			{
+				$_SESSION['tmp_project_id'] = tempID(10);
+				$dir .= 'temp/'.$_SESSION['tmp_project_id'].'_';
+			}
+		}
+		else
+		{
+			$dir 	.= $project_id.'/';
+		}
 
 		// loop all files
 		foreach ( $_FILES['files']['name'] as $i => $name )
@@ -39,8 +48,6 @@
 
 			$file_num++;
 		}
-
 	}
-
 	die(json_encode($data));
 ?>

@@ -1,5 +1,27 @@
 <?php
+	include('../../includes/module.php');
 	$project_id = $_GET['project_id'];
+
+	$getDetails = $con->prepare("SELECT project_id,
+								project_name,
+								project_description,
+								project_client,
+								project_start,
+								project_end,
+								project_estbudget
+								FROM rec_projects
+								WHERE project_id = ?");
+	$getDetails	->bind_param("i", $project_id);
+	$getDetails ->execute();
+	$getDetails ->bind_result($project_id,
+								$project_name,
+								$project_description,
+								$project_client,
+								$project_start,
+								$project_end,
+								$project_estbudget);
+	$getDetails ->fetch();
+	$getDetails ->close();
 ?>
 <div class="row">
 	<div class="col-xs-12 col-md-6">
@@ -9,7 +31,7 @@
 		<a onclick="load_project();" href="javascript:void(0);">
 			<h5 class="pull-right"><i class="fa fa-chevron-left"></i> RETURN TO LIST&emsp;</h5>
 		</a>
-		<a href="javascript:void(0);">
+		<a onclick="update_project(<?php echo $project_id.',1'; ?>)"	href="javascript:void(0);">
 			<h5 class="pull-right"><i class="fa fa-pencil"></i> UPDATE PROJECT&emsp;|&emsp;</h5>
 		</a>
 	</div>
@@ -27,7 +49,7 @@
 					<div class="col-xs-12">
 						<div class="form-group">
 							<label class="mt10">PROJECT NAME</label>
-							<span class="emp-data">Sample Project 1</span>
+							<span class="emp-data"><?php echo $project_name; ?></span>
 						</div>
 					</div>
 				</div>
@@ -36,11 +58,7 @@
 						<div class="form-group">
 							<label class="mt10">PROJECT DESCRIPTION</label>
 							<span class="emp-data">
-								Sample project description<br/>
-								Sample project description<br/>
-								Sample project description<br/>
-								Sample project description<br/>
-								Sample project description<br/>
+								<?php echo $project_description; ?>
 							</span>
 						</div>
 					</div>
@@ -49,7 +67,7 @@
 					<div class="col-xs-12">
 						<div class="form-group">
 							<label class="mt10">PROJECT CLIENT</label>
-							<span class="emp-data">Kliyinti Di Sampul</span>
+							<span class="emp-data"><?php echo $project_client; ?></span>
 						</div>
 					</div>
 				</div>
@@ -57,7 +75,7 @@
 					<div class="col-xs-12">
 						<div class="form-group mb0">
 							<label class="mt10">PROJECT DURATION:</label>
-							<span class="emp-data">10/23/2017 - 10/23/2017</span>
+							<span class="emp-data"><?php echo displayDuration($project_start, $project_end); ?></span>
 						</div>
 					</div>
 				</div>
@@ -65,7 +83,7 @@
 					<div class="col-xs-12">
 						<div class="form-group">
 							<label class="mt10">PROJECT EST. BUDGET:</label>
-							<span class="emp-data"><b>&#8369;</b> 1,250,235.75</span>
+							<span class="emp-data"><b>&#8369;</b> <?php echo displayMoney($project_estbudget); ?></span>
 						</div>
 					</div>
 				</div>
@@ -91,36 +109,37 @@
 						<label class="mt10">FOREMEN</label>
 					</div>
 					<div class="col-xs-12" id="selected_foremen_cont">
+						<?php 
+							$position 	= 1;
+							$getForemen = $con->prepare("SELECT rec_employees.employee_fname,
+														rec_employees.employee_mname,
+														rec_employees.employee_lname,
+														lib_employee_positions.position_name
+														FROM rec_employees 
+														INNER JOIN lib_employee_positions
+														ON rec_employees.position_id = lib_employee_positions.position_id
+														WHERE rec_employees.project_id = ?
+														AND rec_employees.position_id = ?");
+							$getForemen ->bind_param("ii", $project_id, $position);
+							$getForemen ->execute();
+							$getForemen ->bind_result($employee_fname,
+														$employee_mname,
+														$employee_lname,
+														$position_name);
+
+							while($getForemen->fetch()){
+						?>
 						<div class="row selected-row trans100 pt5 pb5">
 							<div class="col-xs-12">
 								<label class="emp-data">
-									DIGOMAUB, HARVEY CHARLES
+									<?php printf("%s, %s %s", $employee_lname, $employee_fname, $employee_mname); ?>
 								</label>
 								<label class="emp-data">
-									<small class="text-gray">(SOFTWARE DEVELOPER)</small>
+									<small class="text-gray"><?php printf("(%s)", $position_name); ?></small>
 								</label>
 							</div>
 						</div>
-						<div class="row selected-row trans100 pt5 pb5">
-							<div class="col-xs-12">
-								<label class="emp-data">
-									DIGOMAUB, HARVEY CHARLES
-								</label>
-								<label class="emp-data">
-									<small class="text-gray">(SOFTWARE DEVELOPER)</small>
-								</label>
-							</div>
-						</div>
-						<div class="row selected-row trans100 pt5 pb5">
-							<div class="col-xs-12">
-								<label class="emp-data">
-									DIGOMAUB, HARVEY CHARLES
-								</label>
-								<label class="emp-data">
-									<small class="text-gray">(SOFTWARE DEVELOPER)</small>
-								</label>
-							</div>
-						</div>
+						<?php } $getForemen->close(); ?>
 					</div>
 				</div>
 				<div class="row">
@@ -129,36 +148,44 @@
 						<label class="mt10">EMPLOYEES</label>
 					</div>
 					<div class="col-xs-12" id="selected_employee_cont">
+						<?php 
+							$position 	= 2;
+							$getEmps	= $con->prepare("SELECT rec_employees.employee_id,
+														rec_employees.employee_fname,
+														rec_employees.employee_mname,
+														rec_employees.employee_lname,
+														lib_employee_positions.position_name
+														FROM rec_employees 
+														INNER JOIN lib_employee_positions
+														ON rec_employees.position_id = lib_employee_positions.position_id
+														WHERE rec_employees.project_id = ?
+														AND rec_employees.position_id = ?");
+							$getEmps 	->bind_param("ii", $project_id, $position);
+							$getEmps	->execute();
+							$getEmps 	->bind_result($employee_id,
+														$employee_fname,
+														$employee_mname,
+														$employee_lname,
+														$position_name);
+
+							while($getEmps->fetch()){
+
+							/*$foremen[$f_index]['id']		= $employee_id;
+							$foremen[$f_index]['name']		= $employee_lname.', '.$employee_fname.' '.$employee_mname;
+							$foremen[$f_index]['position']	= $position_name;
+							$f_index++;*/
+						?>
 						<div class="row selected-row trans100 pt5 pb5">
 							<div class="col-xs-12">
 								<label class="emp-data">
-									DIGOMAUB, HARVEY CHARLES
+									<?php printf("%s, %s %s", $employee_lname, $employee_fname, $employee_mname); ?>
 								</label>
 								<label class="emp-data">
-									<small class="text-gray">(SOFTWARE DEVELOPER)</small>
+									<small class="text-gray"><?php printf("(%s)", $position_name); ?></small>
 								</label>
 							</div>
 						</div>
-						<div class="row selected-row trans100 pt5 pb5">
-							<div class="col-xs-12">
-								<label class="emp-data">
-									DIGOMAUB, HARVEY CHARLES
-								</label>
-								<label class="emp-data">
-									<small class="text-gray">(SOFTWARE DEVELOPER)</small>
-								</label>
-							</div>
-						</div>
-						<div class="row selected-row trans100 pt5 pb5">
-							<div class="col-xs-12">
-								<label class="emp-data">
-									DIGOMAUB, HARVEY CHARLES
-								</label>
-								<label class="emp-data">
-									<small class="text-gray">(SOFTWARE DEVELOPER)</small>
-								</label>
-							</div>
-						</div>
+						<?php } $getEmps->close(); ?>
 					</div>
 				</div>
 				<div class="row">
@@ -167,90 +194,38 @@
 						<label class="mt10">MATERIALS</label>
 					</div>
 					<div class="col-xs-12" id="selected_material_cont">
+						<?php 
+							$position 	= 2;
+							$getMats	= $con->prepare("SELECT rec_project_material_plans.projectmatplan_qty,
+														lib_materials.material_name,
+														lib_materials.material_metric
+														FROM rec_project_material_plans 
+														INNER JOIN lib_materials
+														ON rec_project_material_plans.material_id 
+														= lib_materials.material_id
+														WHERE rec_project_material_plans.project_id = ?");
+							$getMats 	->bind_param("i", $project_id);
+							$getMats	->execute();
+							$getMats 	->bind_result($projectmatplan_qty,
+														$material_name,
+														$material_metric);
+
+							while($getMats->fetch()){
+						?>
 						<div class="row selected-row trans100 pt5 pb5">
 							<div class="col-xs-9">
 								<label class="emp-data">
-									Lumber (Narra) 2x2x10
+									<?php echo $material_name; ?>
 								</label>
 							</div>
 							<div class="col-xs-3">
 								<label class="emp-data align-right">
-									13 <small class="text-gray">pcs</small>
+									<?php echo $projectmatplan_qty; ?> 
+									<small class="text-gray"><?php echo $material_metric; ?></small>
 								</label>
 							</div>
 						</div>
-						<div class="row selected-row trans100 pt5 pb5">
-							<div class="col-xs-9">
-								<label class="emp-data">
-									Lumber (Narra) 2x2x10
-								</label>
-							</div>
-							<div class="col-xs-3">
-								<label class="emp-data align-right">
-									13 <small class="text-gray">pcs</small>
-								</label>
-							</div>
-						</div>
-						<div class="row selected-row trans100 pt5 pb5">
-							<div class="col-xs-9">
-								<label class="emp-data">
-									Lumber (Narra) 2x2x10
-								</label>
-							</div>
-							<div class="col-xs-3">
-								<label class="emp-data align-right">
-									13 <small class="text-gray">pcs</small>
-								</label>
-							</div>
-						</div>
-						<div class="row selected-row trans100 pt5 pb5">
-							<div class="col-xs-9">
-								<label class="emp-data">
-									Lumber (Narra) 2x2x10
-								</label>
-							</div>
-							<div class="col-xs-3">
-								<label class="emp-data align-right">
-									13 <small class="text-gray">pcs</small>
-								</label>
-							</div>
-						</div>
-						<div class="row selected-row trans100 pt5 pb5">
-							<div class="col-xs-9">
-								<label class="emp-data">
-									Lumber (Narra) 2x2x10
-								</label>
-							</div>
-							<div class="col-xs-3">
-								<label class="emp-data align-right">
-									13 <small class="text-gray">pcs</small>
-								</label>
-							</div>
-						</div>
-						<div class="row selected-row trans100 pt5 pb5">
-							<div class="col-xs-9">
-								<label class="emp-data">
-									Lumber (Narra) 2x2x10
-								</label>
-							</div>
-							<div class="col-xs-3">
-								<label class="emp-data align-right">
-									13 <small class="text-gray">pcs</small>
-								</label>
-							</div>
-						</div>
-						<div class="row selected-row trans100 pt5 pb5">
-							<div class="col-xs-9">
-								<label class="emp-data">
-									Lumber (Narra) 2x2x10
-								</label>
-							</div>
-							<div class="col-xs-3">
-								<label class="emp-data align-right">
-									13 <small class="text-gray">pcs</small>
-								</label>
-							</div>
-						</div>
+						<?php } $getMats->close(); ?>
 					</div>
 				</div>
 			</div>
@@ -267,74 +242,38 @@
 				</div>
 				<div class="row">
 					<div class="col-xs-12 plr10">
-<?php
-				    $dir = "./uploads/projects/";
-
-    				foreach (glob($dir.$project_id."_*.{jpg,gif,png}") as $images) 
-    				{
-?>
-					    <div class="col-xs-4 col-sm-3 col-md-4 pad5">
-					        <div class="img img100 attachment-modal" 
-					        	style="background:url('<?=$images?>');"
-					        	data-path="<?=$images?>"
-				        	>
-					        </div>
-					    </div>
-<?php
-    				}
-
-				    $temporary_langsa = "./uploads/projects/1_123455.png";
-?>
-						
-					    <div class="col-xs-4 col-sm-3 col-md-4 pad5">
-					        <div class="img img100 attachment-modal" 
-					        	style="background:url('<?=$temporary_langsa?>');"
-								data-path="<?=$temporary_langsa?>"
-				        	>
-					        </div>
-					    </div>
-					    <div class="col-xs-4 col-sm-3 col-md-4 pad5">
-					        <div class="img img100 attachment-modal" 
-					        	style="background:url('<?=$temporary_langsa?>');"
-								data-path="<?=$temporary_langsa?>"
-				        	>
-					        </div>
-					    </div>
-					    <div class="col-xs-4 col-sm-3 col-md-4 pad5">
-					        <div class="img img100 attachment-modal" 
-					        	style="background:url('<?=$temporary_langsa?>');"
-								data-path="<?=$temporary_langsa?>"
-				        	>
-					        </div>
-					    </div>
-					    <div class="col-xs-4 col-sm-3 col-md-4 pad5">
-					        <div class="img img100 attachment-modal" 
-					        	style="background:url('<?=$temporary_langsa?>');"
-								data-path="<?=$temporary_langsa?>"
-				        	>
-					        </div>
-					    </div>
-					    <div class="col-xs-4 col-sm-3 col-md-4 pad5">
-					        <div class="img img100 attachment-modal" 
-					        	style="background:url('<?=$temporary_langsa?>');"
-								data-path="<?=$temporary_langsa?>"
-				        	>
-					        </div>
-					    </div>
-					    <div class="col-xs-4 col-sm-3 col-md-4 pad5">
-					        <div class="img img100 attachment-modal" 
-					        	style="background:url('<?=$temporary_langsa?>');"
-								data-path="<?=$temporary_langsa?>"
-				        	>
-					        </div>
-					    </div>
+					<?php
+				    	$dir = "../../uploads/projects/".$project_id."/";
+				    
+	    				foreach (glob($dir."*.*") as $files) 
+	    				{
+	    					//fa-file-text-o, fa-file-archive-o, fa-file-o, fa-file-image-o
+	    					$del = $project_id.','.displayFilename($dir,$files)
+					?>		
+						<div class="col-xs-4 col-sm-6 col-md-4 plr5 mt5 attached-file">
+							<a href="<?php echo $files; ?>" download>
+								<span class="emp-file-attachments">
+									<i class="fa fa-file-text-o file-type"></i>
+									<i class="fa fa-trash file-remover" onclick="removeSelectedItem('<?php echo $del; ?>');"></i>
+								</span>
+								<span class="emp-file-attachment-text">
+									<?php echo displayFilename($dir,$files); ?>
+								</span>
+							</a>
+						</div>
+					<?php
+    					}
+					?>
 					</div>
 				</div>
 				<div class="row">
 					<div class="col-xs-12">
 						<label class="mt10 my-btn trans300 align-center">
-							<input type="file" class="hidden" multiple>
-							UPLOAD FILES <i class="fa fa-image"></i>
+							<form id="attachment_form" action="../submits/projects/upload_attachment.php" method="post" enctype="multipart/form-data">
+								<input type="hidden" name="project_id" value="<?php echo $project_id; ?>">
+								<input name="files[]" multiple="multiple" type="file" class="hidden" id="attach_files">
+								UPLOAD FILES <i class="fa fa-image"></i>
+							</form>
 						</label>
 					</div>
 				</div>
@@ -365,13 +304,83 @@
 </div>
 
 <script type="text/javascript">
-	function removeSelectedRow(obj)
+	$('#attach_files').change(function()
 	{
-		$(obj).closest(".selected-row").remove();
+	    var files 	= $('#attach_files')[0].files;
+
+	    for (var i = 0; i < files.length; ++i) {
+	      	var n = encodeURIComponent(files[i].name);
+			
+	     	$('#attachment_form').submit();
+
+	     	//$('#attached_files_cont').append($('<div>a').load('/subpages/projects/load_attached_files.php?name='+n));
+
+	    }
+	});
+
+	$('#attachment_form').ajaxForm({
+
+	    /* set data type json */
+	    dataType:'json',
+
+	    /* reset before submitting */
+	    beforeSend: function() {
+	      //status.fadeOut();
+	      //$('#upload_progress').show();
+
+	      //bar.width('0%');
+	      //percent.html('0%');
+	    },
+
+	    /* progress bar call back*/
+	    uploadProgress: function(event, position, total, percentComplete) {
+	      //var pVel = percentComplete + '%';
+	      //bar.width(pVel);
+	      //percent.html(pVel);
+	    },
+
+	    /* complete call back */
+	    complete: function(data) {
+	      //$('#upload_progress').hide();
+	      //alert(data.responseJSON.count);
+	    }
+
+	});
+
+	function removeSelectedItem(obj) {
+		var ans = confirm("Remove uploaded file?");
+
+		if(ans) {
+			$(obj).closest(".attached-file").remove();
+			deleteAttachment(obj);
+		}
 	}
 
-	$(".attachment-modal").click(function()
-	{	
+	function deleteAttachment(obj) {
+		var file	= obj.split(",");
+
+		$.ajax({
+			url: '../../submits/projects/delete_attachment.php',
+	        type: 'POST',
+	        data: {project_id: file[0], filename: file[1]},
+	        datatype: 'json',
+	        encode : true
+		})
+		.done(function(data) {
+			data = jQuery.parseJSON(data);
+			
+			if(!data.success)
+			{
+				alert("An error occured when deleting the file.");
+			}
+			else
+			{
+				alert("Successfully deleted file.");
+			}
+		});
+	}
+
+	$(".attachment-modal").click(function() {	
 		var img_path = $(this).data("path");
 
 		$("img#img-attachment-cont").attr("src",img_path);

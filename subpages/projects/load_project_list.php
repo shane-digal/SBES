@@ -1,6 +1,8 @@
 <?php
 	include("../../includes/get_projects.php");
-
+	if(isset($_SESSION['tmp_project_id']))
+		unset($_SESSION['tmp_project_id']);
+	
 	$key 			= $_GET['key'];
 	$status 		= $_GET['status'];
 	$dates			= explode(" - ", $_GET['daterange']);
@@ -29,7 +31,38 @@
 		<?php while($getProjects->fetch()){ ?>
 		<div class="row project-row trans300 <?= $project_status; ?>">
 			<div class="col-xs-6 col-md-1 align-right pull-right">
-				<span><i class="fa fa-gear"></i></span>
+				<span class="dropdown pull-right">
+					<a class="dropdown-toggle" href="javascript:void(0);" type="button" data-toggle="dropdown" >
+						<i class="fa fa-gear"></i>
+					</a>
+					<ul class="dropdown-menu" style="left:-200px; width: 220px;">
+						<li>
+							<a href="" title="">
+								<i class="fa fa-flag fa-xs legend-pending"></i> Set as Pending
+							</a>
+						</li>
+						<li>
+							<a href="" title="">
+								<i class="fa fa-flag fa-xs legend-approved"></i> Set as Approved
+							</a>
+						</li>
+						<li>
+							<a href="" title="">
+								<i class="fa fa-flag fa-xs legend-ongoing"></i> Set as Ongoing
+							</a>
+						</li>
+						<li>
+							<a href="" title="">
+								<i class="fa fa-flag fa-xs legend-completed"></i> Set as Completed
+							</a>
+						</li>
+						<li>
+							<a href="" title="">
+								<i class="fa fa-flag fa-xs legend-cancelled"></i> Set as Cancelled
+							</a>
+						</li>
+					</ul>
+				</span>
 			</div>
 			<span onclick="load_project_profile(<?php echo $project_id; ?>);">
 				<div class="col-xs-6 col-md-1">

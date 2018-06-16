@@ -6,7 +6,7 @@
 		<a onclick="load_add_payroll();" href="javascript:void(0);">
 			<h5 class="pull-right"><i class="fa fa-plus"></i> NEW PAYROLL&emsp;</h5>
 		</a>
-		<a onclick="load_payroll_drafts();" href="javascript:void(0);">
+		<a onclick="load_payroll_draft();" href="javascript:void(0);">
 			<h5 class="pull-right"><i class="fa fa-folder-o"></i> OPEN DRAFTS&emsp;|&emsp;</h5>
 		</a>
 	</div>
@@ -49,8 +49,9 @@
 								>
 									<option value="All">All</option>
 									<option value="Pending">Pending</option>
-									<option value="Released">Released</option>
-									<option value="On Hold">On Hold</option>
+									<option value="Approved">Approved</option>
+									<option value="Ongoing">Ongoing</option>
+									<option value="Completed">Completed</option>
 								</select>
 							</div>
 						</div>
@@ -92,7 +93,8 @@
 				<div class="col-xs-12 align-right">
 					<i class="fa fa-circle-o legend-pending"></i> Pending&emsp;
 					<i class="fa fa-circle-o legend-approved"></i> Approved&emsp;
-					<i class="fa fa-circle-o legend-ongoing"></i> On Hold&emsp;
+					<i class="fa fa-circle-o legend-ongoing"></i> Ongoing&emsp;
+					<i class="fa fa-circle-o legend-completed"></i> Completed&emsp;
 				</div>
 			</div>
 			<div class="row mt20">
@@ -103,19 +105,20 @@
 	</div>
 </div>
 <script type="text/javascript">
-	$("#search_daterange").change(function() {
+	$("#search_daterange").change(function()
+	{
 		load_payroll_list(1);
 	});
-
-	$("#search_limit").change(function() {
+	$("#search_limit").change(function()
+	{
 		load_payroll_list(1);
 	});
-
-	$("#search_status").change(function() {
+	$("#search_status").change(function()
+	{
 		load_payroll_list(1);
 	});
-
-	$("#search_key").keyup(function() {
+	$("#search_key").keyup(function()
+	{
 		load_payroll_list(1);
 	});
 
