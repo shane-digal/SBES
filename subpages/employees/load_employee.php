@@ -37,12 +37,7 @@
 								class="form-control"
 								id="search_project"
 							>
-								<option value="">All</option>
-								<option>Project 1</option>
-								<option>Project 2</option>
-								<option>Project 3</option>
-								<option>Project 4</option>
-								<option>Project 5</option>
+								<option value="0">All</option>
 							</select>
 						</div>
 					</div>
@@ -101,4 +96,17 @@
 	}
     
     load_employee_list(1);
+
+	$.ajax({
+		url : "http://localhost/sbes/api?q=GetApprovedProjects",
+		method: "POST",
+		dataType: 'json',
+		success: function(response){
+			var cbox;
+			$.each(response.values, function(key, v){
+			cbox = 	'<option value="'+v.project_id+'">' + v.project_name + '</option>';
+			$('#search_project').append(cbox);
+			});
+		}
+	});
 </script>

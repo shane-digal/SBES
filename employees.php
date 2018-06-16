@@ -23,5 +23,4 @@
 	}
 
 	load_employee();
-	// load_employee_profile(1);
 </script>

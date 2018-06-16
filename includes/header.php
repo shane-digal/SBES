@@ -10,6 +10,9 @@
 
     <link rel="stylesheet" href="resources/theme/bower_components/font-awesome/css/font-awesome.min.css">
     <link rel="stylesheet" href="resources/theme/bower_components/Ionicons/css/ionicons.min.css">
+    <link rel="stylesheet" href="resources/theme/bower_components/bootstrap-daterangepicker/daterangepicker.css">
+    <link rel="stylesheet" href="resources/theme/bower_components/bootstrap-timepicker/css/timepicker.css">
+    <link rel="stylesheet" href="resources/theme/bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css">
 
     <link rel="stylesheet" href="resources/theme/dist/css/AdminLTE.min.css">
     <link rel="stylesheet" href="resources/theme/dist/css/skins/skin-purple.min.css">
@@ -17,12 +20,11 @@
     <link rel="stylesheet" href="resources/css/style.css">
     <link rel="stylesheet" href="resources/css/media.css">
 
-    <link rel="stylesheet"
-        href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
+    <!-- <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic"> -->
 
 
   <!-- daterange picker -->
-  <link rel="stylesheet" href="resources/theme/bower_components/bootstrap-daterangepicker/daterangepicker.css">
 </head>
 <body class="hold-transition skin-purple sidebar-mini">
 <div class="wrapper">
@@ -84,7 +86,7 @@
                                     <a href="#">
                                         <i class="fa fa-users text-aqua"></i> 5 new members joined today
                                     </a>
-                                </li>
+                                </li>``
                             </ul>
                         </li>
                         <li class="footer"><a href="#">View all</a></li>

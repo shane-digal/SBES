@@ -9,11 +9,4 @@
 </div>
 <?php include("includes/footer.php");?>
 <script type="text/javascript">
-	function load_inventory()
-	{
-		$("#main-content-container").load("./subpages/inventory/load_inventory.php");
-	}
-
-	load_inventory();
-	// load_employee_profile(1);
 </script>

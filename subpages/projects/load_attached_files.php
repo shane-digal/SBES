@@ -4,7 +4,7 @@
 <div class="row selected-row trans100 pt5 pb5">
 	<div class="col-xs-12">
 		<div class="sel-emp-action-col">
-			<a onclick="removeSelectedItem(this);" href="javascript:void(0);" class="red-href" name="<?php echo $name; ?>">
+			<a onclick="removeSelectedItem(this);" href="javascript:void(0);" class="red-href">
 				<small><i class="fa fa-times"></i></small>
 			</a>
 		</div>

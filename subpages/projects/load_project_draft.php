@@ -16,7 +16,7 @@
 		<div class="my-container">
 			<div class="row">
 				<div class="col-xs-12 plr10">
-					<div class="col-xs-8 col-sm-4 col-md-1 col-md-offset-5 plr5">
+					<div class="col-xs-8 col-sm-4 col-md-1 col-md-offset-2 plr5">
 						<div class="form-group">
 							<label>LIMIT</label>
 							<select 
@@ -99,6 +99,10 @@
 	{
 		load_project_list(1);
 	});
+	$("#search_status").change(function()
+	{
+		load_project_list(1);
+	});
 	$("#search_key").keyup(function()
 	{
 		load_project_list(1);
@@ -108,6 +112,7 @@
 	{
 		var limit = $("#search_limit").val();
 		var key = encodeURI($("#search_key").val());
+		var status = encodeURI($("#search_status").val());
 		var daterange = encodeURI($("#search_daterange").val());
 
 		$("#project-cont").load("./subpages/projects/load_project_draft_list.php?limit="+limit+"&daterange="+daterange+"&key="+key+"&page="+page);

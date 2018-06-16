@@ -12,54 +12,25 @@
 	$range 			= ($dates[0] == $dates[1]) ? "" : $_GET['daterange'];
 
 	//$searchKey = "", $dateRange = "", $status = "", $limit, $offset
-	$getProjects 	= getProjectDraftList($key, $range, $limit, $offset);
+	$getProjects 	= getProjectList($key, $range, $status, $limit, $offset);
 
 	$getProjects 	->bind_result(	$project_id, 
 									$project_name, 
 									$employee_count, 
 									$project_start, 
 									$project_end, 
-									$project_estbudget);
+									$project_estbudget, 
+									$project_status);
+	
 ?>
 <div class="row">
 	<div class="col-xs-12">
 		<?php while($getProjects->fetch()){ ?>
-		<div class="row project-row trans300">
+		<div class="row project-row trans300 <?= $project_status; ?>">
 			<div class="col-xs-6 col-md-1 align-right pull-right">
-				<span class="dropdown pull-right">
-					<a class="dropdown-toggle" href="javascript:void(0);" type="button" data-toggle="dropdown" >
-						<i class="fa fa-gear"></i>
-					</a>
-					<ul class="dropdown-menu" style="left:-200px; width: 220px;">
-						<li>
-							<a href="" title="">
-								<i class="fa fa-flag fa-xs legend-pending"></i> Set as Pending
-							</a>
-						</li>
-						<li>
-							<a href="" title="">
-								<i class="fa fa-flag fa-xs legend-approved"></i> Set as Approved
-							</a>
-						</li>
-						<li>
-							<a href="" title="">
-								<i class="fa fa-flag fa-xs legend-ongoing"></i> Set as Ongoing
-							</a>
-						</li>
-						<li>
-							<a href="" title="">
-								<i class="fa fa-flag fa-xs legend-completed"></i> Set as Completed
-							</a>
-						</li>
-						<li>
-							<a href="" title="">
-								<i class="fa fa-flag fa-xs legend-cancelled"></i> Set as Cancelled
-							</a>
-						</li>
-					</ul>
-				</span>
+				<span><i class="fa fa-gear"></i></span>
 			</div>
-			<span onclick="update_project(<?php echo $project_id.',2'; ?>);">
+			<span onclick="load_project_profile(<?php echo $project_id; ?>);">
 				<div class="col-xs-6 col-md-1">
 					<span><?php printf("#%s", $project_id); ?></span>
 				</div>

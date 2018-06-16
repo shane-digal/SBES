@@ -1,4 +1,3 @@
-
 <div class="row">
 	<div class="col-xs-12">
 		<button type="button" class="close" data-dismiss="modal">&times;</button>
@@ -37,16 +36,15 @@
 <script type="text/javascript">
 	function load_employees_selection_list()
 	{
-		
 		if(w_count != 0)
 		{
 			var worker_ids 	= encodeURIComponent(workers.join());
-			
-			$("#selection_list_cont").load("./subpages/projects/load_employees_selection_list.php?ids=" + worker_ids + "&id=" + prj_id);
+
+			$("#selection_list_cont").load("./subpages/projects/load_employees_selection_list.php?ids=" + worker_ids);
 		}
 		else
 		{
-			$("#selection_list_cont").load("./subpages/projects/load_employees_selection_list.php?id=" + prj_id);	
+			$("#selection_list_cont").load("./subpages/projects/load_employees_selection_list.php");	
 		}
 	}
 
