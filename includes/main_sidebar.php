@@ -46,6 +46,22 @@
                     <i class="wh40 ion-ios-list-outline"></i> <span>INVENTORY</span>
                 </a>
             </li>
+
+            <li class="treeview">
+                <a href="#">
+                    <i class="wh40 ion-ios-list-outline"></i> <span>INVENTORY</span>
+                    <span class="pull-right-container">
+                        <i class="fa fa-angle-left pull-right"></i>
+                    </span>
+                </a>
+                <ul class="treeview-menu">
+                    <li class="active"><a href="inventory.php"><small>ITEMS</small></a></li>
+                    <li><a href="acquisition.php"><small>ACQUISITION</small></a></li>
+                    <li><a href="issuance.php"><small>ISSUANCE</small></a></li>
+                    <li><a href="transferral.php"><small>TRANSFERRAL</small></a></li>
+                </ul>
+             </li>
+
             <li id="li-employees">
                 <a href="employees.php">
                     <i class="wh40 ion-ios-people-outline"></i> <span>EMPLOYEES</span>
@@ -56,26 +72,6 @@
                     <i class="wh40 ion-ios-gear-outline"></i> <span>SETTINGS</span>
                 </a>
             </li>
-            <!-- <li class="treeview">
-                <a href="#">
-                    <i class="fa fa-link"></i> <span>Multilevel</span>
-                    <span class="pull-right-container">
-                        <i class="fa fa-angle-left pull-right"></i>
-                    </span>
-                </a>
-                <ul class="treeview-menu">
-                    <li>
-                        <a href="#">
-                            Link in level 2
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#">
-                            Link in level 2
-                        </a>
-                    </li>
-                </ul>
-            </li> -->
         </ul>
     </section>
 </aside>

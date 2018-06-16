@@ -86,7 +86,7 @@
                                     <a href="#">
                                         <i class="fa fa-users text-aqua"></i> 5 new members joined today
                                     </a>
-                                </li>``
+                                </li>
                             </ul>
                         </li>
                         <li class="footer"><a href="#">View all</a></li>
