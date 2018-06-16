@@ -20,8 +20,8 @@
     <link rel="stylesheet" href="resources/css/style.css">
     <link rel="stylesheet" href="resources/css/media.css">
 
-    <!-- <link rel="stylesheet"
-        href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic"> -->
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
 
 
   <!-- daterange picker -->
@@ -55,8 +55,8 @@
                                 <li>
                                     <a href="#">
                                         <div class="pull-left">
-                                            <img src="resources/theme/dist/img/user2-160x160.jpg" 
-                                                    class="img-circle" 
+                                            <img src="resources/theme/dist/img/user2-160x160.jpg"
+                                                    class="img-circle"
                                                     alt="User Image"
                                             />
                                         </div>
@@ -109,11 +109,11 @@
                                         <small class="pull-right">20%</small>
                                     </h3>
                                     <div class="progress xs">
-                                        <div class="progress-bar progress-bar-aqua" 
-                                                style="width: 20%" 
+                                        <div class="progress-bar progress-bar-aqua"
+                                                style="width: 20%"
                                                 role="progressbar"
-                                                aria-valuenow="20" 
-                                                aria-valuemin="0" 
+                                                aria-valuenow="20"
+                                                aria-valuemin="0"
                                                 aria-valuemax="100"
                                         >
                                             <span class="sr-only">20% Complete</span>
