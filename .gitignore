@@ -41,4 +41,4 @@ run
 .vs
 AdminLTE-2.4.2/
 vendor/
-resources/themes
+resources/theme/
