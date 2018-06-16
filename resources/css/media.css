@@ -1,0 +1,98 @@
+
+/* Custom, iPhone Retina  */
+
+@media only screen and (min-width : 320px) {
+	.filter-hide-xs
+	{
+		display: none;
+	}
+	.align-right-sm
+	{
+		text-align: left;
+	}
+	.employee-img-cont
+	{
+		display: none;
+	}
+	.employee-text-cont
+	{
+		width: calc(100% - 40px);
+		float:left;
+		padding:0px 5px;
+	}
+	.over-7th-md
+	{
+		width: 100%;
+		float:left;
+	}
+	.align-right-xs-only
+	{
+		text-align: right;
+	}
+	.text-gray-xs-only
+	{
+		color:#c9c9c9;
+	}
+
+	.small-xs-only
+	{
+		font-size:70%;
+	}
+}
+
+/* Extra Small Devices, Phones */ 
+@media only screen and (min-width : 480px) {
+	.filter-hide-xs
+	{
+		display: initial !important;
+	}
+	.employee-img-cont
+	{
+		width: 40px;
+		display: initial;
+		float:left;
+	}
+	.employee-text-cont
+	{
+		width: calc(100% - 80px);
+		float:left;
+		padding:0px 5px;
+	}
+}
+
+/* Small Devices, Tablets */
+@media only screen and (min-width : 768px) {
+	.align-right-md
+	{
+		text-align: right;
+	}
+	.align-right-sm
+	{
+		text-align: right;
+	}
+	.align-right-xs-only
+	{
+		text-align: initial;
+	}
+	.text-gray-xs-only
+	{
+		color:initial;
+	}
+	.small-xs-only
+	{
+		font-size:100%;
+	}
+}
+
+/* Medium Devices, Desktops */
+@media only screen and (min-width : 992px) {
+	.over-7th-md
+	{
+		width: 14.28%;
+	}
+}
+
+/* Large Devices, Wide Screens */
+@media only screen and (min-width : 1200px) {
+
+}

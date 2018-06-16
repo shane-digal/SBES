@@ -1,0 +1,214 @@
+$speed: 100;
+@while $speed <= 1000
+{
+	.trans#{$speed}{
+		transition: all $speed+ms;
+	}
+	$speed: $speed + 100;
+}
+
+$pt: 0;
+@while $pt <= 100
+{
+	.pt#{$pt}
+	{
+		padding-top:$pt+px;
+	}
+	$pt: $pt + 5;
+}
+
+$pb: 0;
+@while $pb <= 100
+{
+	.pb#{$pb}
+	{
+		padding-bottom:$pb+px;
+	}
+	$pb: $pb + 5;
+}
+
+$pl: 0;
+@while $pl <= 100
+{
+	.pl#{$pl}
+	{
+		padding-left:$pl+px;
+	}
+	$pl: $pl + 5;
+}
+
+$pr: 0;
+@while $pr <= 100
+{
+	.pr#{$pr}
+	{
+		padding-right:$pr+px;
+	}
+	$pr: $pr + 5;
+}
+
+
+
+$ptb: 0;
+@while $ptb <= 100
+{
+	.ptb#{$ptb}
+	{
+		padding-top:$ptb+px;
+		padding-bottom:$ptb+px;
+	}
+	$ptb: $ptb + 5;
+}
+
+
+$plr: 0;
+@while $plr <= 100
+{
+	.plr#{$plr}
+	{
+		padding-left:$plr+px;
+		padding-right:$plr+px;
+	}
+	$plr: $plr + 5;
+}
+
+$pad: 0;
+@while $pad <= 100
+{
+	.pad#{$pad}
+	{
+		padding:$pad+px;
+	}
+	$pad: $pad + 5;
+}
+
+
+$mt: 0;
+@while $mt <= 100
+{
+	.mt#{$mt}
+	{
+		margin-top:$mt+px;
+	}
+	$mt: $mt + 5;
+}
+
+$mb: 0;
+@while $mb <= 100
+{
+	.mb#{$mb}
+	{
+		margin-bottom:$mb+px;
+	}
+	$mb: $mb + 5;
+}
+
+$ml: 0;
+@while $ml <= 100
+{
+	.ml#{$ml}
+	{
+		margin-left:$ml+px;
+	}
+	$ml: $ml + 5;
+}
+
+$mr: 0;
+@while $mr <= 100
+{
+	.mr#{$mr}
+	{
+		margin-right:$mr+px;
+	}
+	$mr: $mr + 5;
+}
+
+
+$mtb: 0;
+@while $mtb <= 100
+{
+	.mtb#{$mtb}
+	{
+		margin-top:$mtb+px;
+		margin-bottom:$mtb+px;
+	}
+	$mtb: $mtb + 5;
+}
+
+
+$mlr: 0;
+@while $mlr <= 100
+{
+	.mlr#{$mlr}
+	{
+		margin-left:$mlr+px;
+		margin-right:$mlr+px;
+	}
+	$mlr: $mlr + 5;
+}
+
+$mar: 0;
+@while $mar <= 100
+{
+	.mar#{$mar}
+	{
+		margin:$mar+px;
+	}
+	$mar: $mar + 5;
+}
+
+$br: 0;
+
+@while $br <= 30
+{
+	.br#{$br}
+	{
+		border-radius:$br+px;
+	}
+	$br: $br+1;
+}
+
+.img
+{
+	width:100%;
+	height:0px;
+	background-size:cover !important;
+	background-repeat:no-repeat !important;
+	background-position: center !important;
+}
+
+$img: 5;
+@while $img <= 100
+{
+	.img#{$img}
+	{
+		padding-top:$img+0%;
+	}
+	$img: $img+5;
+}
+
+
+.align-left
+{
+	text-align: left;
+}
+.align-center
+{
+	text-align: center;
+}
+.align-right
+{
+	text-align: right;
+}
+
+.red-href
+{
+	color:red;
+	transition: all 100ms ease-in-out;
+	:hover, 
+	:active,
+	:visited
+	{
+		color:#ab1919;
+	}
+}
