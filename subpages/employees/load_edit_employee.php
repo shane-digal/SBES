@@ -2,6 +2,7 @@
 #employee_avatar_display
 {
 	transition:all 200ms ease-in-out;
+	background: #676767;
 }
 .img-remove-btn
 {
@@ -12,21 +13,23 @@
     color: white;
 }
 </style>
+
+
 <div class="row">
 	<div class="col-xs-12 col-md-6">
-		<h4>REGISTER NEW EMPLOYEE</h4>
+		<h4 id="update-label">UPDATE EMPLOYEE</h4>
 	</div>
 	<div class="col-xs-12 col-md-6">
-		<a onclick="load_employee();" href="javascript:void(0);">
-			<h5 class="pull-right"><i class="fa fa-chevron-left"></i> RETURN TO LIST&emsp;</h5>
+		<a onclick="return_to_emp_profile();" href="javascript:void(0);">
+			<h5 class="pull-right"><i class="fa fa-chevron-left"></i> RETURN TO EMPLOYEE DETAIL&emsp;</h5>
 		</a>
-		<a onclick="submitNewEmployee()" href="javascript:void(0);">
-			<h5 class="pull-right"><i class="fa fa-check"></i> REGISTER EMPLOYEE&emsp;|&emsp;</h5>
+		<a onclick="submitUpdatedEmployee()" href="javascript:void(0);">
+			<h5 class="pull-right"><i class="fa fa-check"></i> UPDATE EMPLOYEE&emsp;|&emsp;</h5>
 		</a>
 	</div>
 </div>
 <div class="row">
-	<form id="form-new_employee" enctype="multipart/form-data" method="post" >
+	<form id="form-new_employee">
 	<input type="submit" id="submit-btn" hidden>
 	<div class="col-xs-12 plr10">
 		<div class="col-xs-12 col-md-8 plr5">
@@ -59,7 +62,7 @@
 												<input type="file" name="imageAvatar" id="employee_avatar" class="hidden"  accept="image/*"/>
 												<p id="employee_avatar_remove_cont" style="position: absolute; right:0; margin:0px;"></p>
 												<label for="employee_avatar" style="width:100%; display:absolute;">
-													<div id="employee_avatar_display" class="img img100" style="background:url('https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png') #676767;">
+													<div id="employee_avatar_display" class="img img100">
 													</div>
 												</label>
 											</div>
@@ -116,9 +119,10 @@
 												class="form-control"
 												name="status"
 											>
-												<option>CONTRACTUAL</option>
-												<option>JOB ORDER</option>
-												<option>REGULAR</option>
+												<option value="CONTRACTUAL">CONTRACTUAL</option>
+												<option value="JOB ORDER">JOB ORDER</option>
+												<option value="REGULAR">REGULAR</option>
+												<option value="SUSPENDED">SUSPENDED</option>
 											</select>
 										</div>
 										<div class="col-xs-12 col-md-4 plr5">
@@ -208,18 +212,18 @@
 					$days = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
 					foreach ($days as $key => $value) {
 						?>
-						<div class="row">
+						<div class="row " >
 							<div class="col-xs-12 plr10">
 								<div class="col-xs-12 plr5">
 									<label class="mt10 mb0 my-cb-label"><?=$value?>
-										<input type="checkbox" class="my-cb" name="schedule_days[]" data-index=<?=$key?> value="<?=$value?>" checked>
+										<input type="checkbox" class="my-cb" name="schedule_days[]" data-index=<?=$key?> value="<?=$value?>">
 										<span></span>
 									</label>
 								</div>
 								<div class="col-xs-6 plr5 bootstrap-timepicker">
 									<h5 class="mt5 mb5"><small>FROM</small></h5>
 									<div class="input-group">
-										<input type="text" class="form-control timepicker from-time" name="time-from[]">
+										<input type="text" class="form-control timepicker from-time <?= $value?>" name="time-from[]" disabled>
 										<div class="input-group-addon">
 											<i class="fa fa-clock-o"></i>
 										</div>
@@ -228,7 +232,7 @@
 								<div class="col-xs-6 plr5 bootstrap-timepicker">
 									<h5 class="mt5 mb5"><small>TO</small></h5>
 									<div class="input-group">
-										<input type="text" class="form-control timepicker to-time" name="time-to[]">
+										<input type="text" class="form-control timepicker to-time <?= $value?>" name="time-to[]" disabled>
 										<div class="input-group-addon">
 											<i class="fa fa-clock-o"></i>
 										</div>
@@ -240,7 +244,9 @@
 						<?php
 					}
 				?>
+					<div id="for-hidden-data">
 
+					</div>
 			</div>
 		</div>
 	</div>
@@ -256,5 +262,5 @@
 	</div>
 </div>
 
-<script src="subpages/employees/add_employee.js"></script>
+<script src="subpages/employees/edit_employee.js"></script>
 <script src="subpages/employees/add_edit_shared_controls.js"></script>
