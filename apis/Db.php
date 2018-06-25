@@ -14,11 +14,7 @@
 
         function connectMySqli(){
             $db_con = new mysqli($this->DB_SERVER,$this->DB_USERNAME,$this->DB_PASSWORD,$this->DB_DATABASE);
-            return $db_con;            
-        }
-
-        function executeCountQuery($sql){
-            
+            return $db_con;
         }
 
         function cleanString($str){

@@ -1,5 +1,6 @@
-<?php 
-    //READ 
+<?php
+    //READ
+    $now = "NOW()";
     switch($q){
         case "GetEmployees":
             $key = (isset($_POST['a']) ? $db->cleanString($_POST['a']) : '');
@@ -9,11 +10,11 @@
             $position_id = (isset($_POST['']) ? $db->cleanString($_POST['a']) : '1');
 
             $getEmployees   =
-                $con->prepare("	SELECT 
-                                    re.employee_id, 
-                                    re.employee_fname, 
-                                    re.employee_mname, 
-                                    re.employee_lname, 
+                $con->prepare("	SELECT
+                                    re.employee_id,
+                                    re.employee_fname,
+                                    re.employee_mname,
+                                    re.employee_lname,
                                     re.employee_imagepath,
                                     lep.position_name
                                 FROM rec_employees AS re
@@ -39,7 +40,7 @@
             $res = $rst->get_result();
             $json_value = $res->fetch_all(MYSQLI_ASSOC);
             $rst->close();
-            break;            
+            break;
         case "GetDeductions":
             $sql = "SELECT deduction_id, deduction_name FROM lib_deductions";
             $message = "Deductions fetched";
@@ -48,10 +49,10 @@
             $res = $rst->get_result();
             $json_value = $res->fetch_all(MYSQLI_ASSOC);
             $rst->close();
-            break;            
+            break;
         case "GetAllPositions" :
             $sql = "SELECT position_id, position_name FROM lib_employee_positions";
-            $message = "Positions fetched";            
+            $message = "Positions fetched";
             $rst = $con->prepare($sql);
             $rst->execute();
             $res = $rst->get_result()   ;
@@ -59,7 +60,7 @@
             $rst->close();
             break;
         case "GetApprovedProjects" :
-            $sql = "SELECT project_id, project_name, project_description 
+            $sql = "SELECT project_id, project_name, project_description
                     FROM rec_projects
                     WHERE project_status NOT IN ('Cancelled', 'Pending', 'Completed')";
             $message = "Projects fetched";
@@ -71,7 +72,7 @@
             break;
 
         case "GetUserBonuses":
-            $sql = "SELECT * 
+            $sql = "SELECT *
                     FROM rec_empbonuses re
                     LEFT JOIN lib_bonuses lb
                         ON re.bonus_id = lb.bonus_id
@@ -84,8 +85,8 @@
             $rst->close();
             break;
         case "GetUserDeductions":
-            $sql = "SELECT * 
-                    FROM rec_empdeductions re 
+            $sql = "SELECT *
+                    FROM rec_empdeductions re
                     LEFT JOIN lib_deductions ld
                         ON re.deduction_id = ld.deduction_id
                     WHERE employee_id = ?";
@@ -97,8 +98,19 @@
             $rst->close();
             break;
         case "GetUserSchedule":
-            $sql = "SELECT * 
+            $sql = "SELECT *
                     FROM rec_empschedules
+                    WHERE employee_id = ?";
+            $rst = $con->prepare($sql);
+            $rst->bind_param('i', $_POST['emp_id']);
+            $rst->execute();
+            $res = $rst->get_result();
+            $json_value = $res->fetch_all(MYSQLI_ASSOC);
+            $rst->close();
+            break;
+        case "GetEmployeeFiles":
+            $sql = "SELECT *
+                    FROM rec_employee_files
                     WHERE employee_id = ?";
             $rst = $con->prepare($sql);
             $rst->bind_param('i', $_POST['emp_id']);
@@ -112,24 +124,45 @@
     // CREATE
     switch($q){
         case "InsertNewEmployee":
-            $sqlstr = $db->CreateInsertValuesParameters(9);
-            $sqlstr = "CALL Insert_newEmployee " . $sqlstr . ";";
+            $sqlstr = $db->CreateInsertValuesParameters(13);
+            $sqlstr = "INSERT INTO rec_employees
+                        (
+                            project_id,
+                            position_id,
+                            employee_fname,
+                            employee_mname,
+                            employee_lname,
+                            employee_imagepath,
+                            employee_empstatus,
+                            employee_wage,
+                            employee_tmonth,
+                            employee_status,
+                            employee_inserted,
+                            employee_lastupdated,
+                            employee_remarks
+                            )
+                    VALUES ". $sqlstr .";
+            ";
             $sql = $con->prepare($sqlstr);
-            $imgpath = '';
-            $sql->bind_param("ssssssiis" 
+            $status = 'SINGLE';
+            $sql->bind_param("iisssssdsssss"
+                            , $_POST['assignment']
+                            , $_POST['position']
                             , $_POST['firstname']
                             , $_POST['middlename']
                             , $_POST['lastname']
-                            , $imgpath
+                            , $_POST['imgUrl']
                             , $_POST['status']
                             , strval($_POST['wage'])
-                            , $_POST['assignment']
-                            , $_POST['position']
+                            , $now
+                            , $status
+                            , $now
+                            , $now
                             , $_POST['remarks']
                         );
             $sql->execute();
-            $res = $sql->get_result();            
-            $json_value = $res->fetch_all(MYSQLI_ASSOC);
+            $res = $sql->get_result();
+            $json_value = mysqli_insert_id($con);
             $sql->close();
             $message = "Added successfully!";
             break;
@@ -157,10 +190,10 @@
                         , $status);
                     $sql->execute();
                 }
-                $sql->close();            
+                $sql->close();
                 $message = "Added successfully.";
             }else{
-                $message = "Nothing to Add.";                
+                $message = "Nothing to Add.";
             }
             break;
         case "InsertDeductions" :
@@ -171,7 +204,7 @@
                 deduction_id
             ) VALUES " . $sqlstr .";" ;
             $sql = $con->prepare($sqlstr);
-            
+
             if(isset($_POST['deduction'])){
                 foreach ($_POST['deduction'] as $key => $value) {
                     $sql->bind_param('ii'
@@ -179,10 +212,10 @@
                         , $value);
                     $sql->execute();
                 }
-                $sql->close();            
+                $sql->close();
                 $message = "Added successfully.";
             }else{
-                $message = "Nothing to Add.";                
+                $message = "Nothing to Add.";
             }
             $message = "Added successfully!";
             break;
@@ -195,7 +228,7 @@
                 bonus_id
             ) VALUES " . $sqlstr .";" ;
             $sql = $con->prepare($sqlstr);
-    
+
 
             if(isset($_POST['bonus'])){
                 foreach ($_POST['bonus'] as $key => $value) {
@@ -204,11 +237,80 @@
                         , $value);
                     $sql->execute();
                 }
-                $sql->close();            
+                $sql->close();
                 $message = "Added successfully.";
             }else{
-                $message = "Nothing to Add.";                
+                $message = "Nothing to Add.";
             }
             $message = "Added successfully!";
             break;
+        case 'addFile':
+            $sqlstr = $db->CreateInsertValuesParameters(3);
+            $sqlstr = " INSERT INTO rec_employee_files
+            (
+                employee_id,
+                file_name,
+                file_link
+            ) VALUES " . $sqlstr .";" ;
+            $sql = $con->prepare($sqlstr);
+
+            if(isset($_POST['fileData'])){
+                foreach ($_POST['fileData'] as $key => $main) {
+                    foreach ($main as $k => $value) {
+                        $sql->bind_param('iss'
+                            , $_POST['emp_id']
+                            , $value['filename']
+                            , $value['url']);
+                        $sql->execute();
+                    }
+                }
+                $sql->close();
+                $message = $_POST['emp_id'];
+            }
+            $message = $_POST['emp_id'];
+            break;
+    }
+
+//Update
+    switch($q){
+        case 'UpdateEmployee':
+            $json_value = $updateUser->executeUpdate($_POST);
+            $message = $updateUser->checkCurrentData();
+        case 'UpdateEmployeeImage':
+            if (isset($_POST['newImgUrl'])) {
+                $json_value = $updateUser->updateImageUrl($_POST['newImgUrl'], $_POST['oldImgUrl'], $_POST['empId']);
+                // $json_value = $_POST;
+                $message = 'Image URL Updated';
+            }
+        case 'UpdateEmployeeStatus':
+            if(isset($_POST['emp_id'])){
+                $json_value = $updateUser->updateStatus($_POST['emp_id'], $_POST['status']);
+                $message = '';
+            }
+        break;
+    }
+
+// Delete
+    switch($q){
+        case 'DeleteUserFile':
+            $fileId = $_POST['file_id'];
+            $sqlstr = "SELECT * FROM rec_employee_files
+                WHERE file_id = $fileId
+            ";
+            $sql = $con->prepare($sqlstr);
+            $sql->execute();
+            $res = $sql->get_result();
+            foreach($res as $key => $val){
+                $file_link = $val['file_link'];
+            }
+            unlink($file_link);
+            $sql->close();
+            $sqlstr = "DELETE FROM rec_employee_files
+                WHERE file_id = $fileId
+            ";
+            $sql = $con->prepare($sqlstr);
+            $sql->execute();
+            $sql->close();
+
+        break;
     }
