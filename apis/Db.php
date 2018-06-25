@@ -17,10 +17,6 @@
             return $db_con;
         }
 
-        function executeCountQuery($sql){
-
-        }
-
         function cleanString($str){
             return mysqli_real_escape_string($con, $str);
         }

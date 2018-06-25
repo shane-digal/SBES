@@ -29,15 +29,6 @@ jspm_packages
 # User-specific stuff:
 .idea
 .vscode
-public
-dev/assets/css/
-dev/config.json
-dev/_temp
-.history
-.log
-.DS_Store
-config.json
-run
 .vs
 AdminLTE-2.4.2/
 vendor/

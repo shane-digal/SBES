@@ -299,7 +299,8 @@
 		$('#selected_employee_cont').append($('<div>').load('./subpages/projects/load_employees.php?id='+prj_id+'&edit='+edit_or_draft));
 		$('#selected_material_cont').append($('<div>').load('./subpages/projects/load_materials.php?id='+prj_id+'&edit='+edit_or_draft));
 	}
-	else {
+	else
+	{
 		$('#search_daterange').daterangepicker();
 	}
     

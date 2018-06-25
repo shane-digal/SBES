@@ -25,19 +25,6 @@
 		width: 100%;
 		float:left;
 	}
-	.align-right-xs-only
-	{
-		text-align: right;
-	}
-	.text-gray-xs-only
-	{
-		color:#c9c9c9;
-	}
-
-	.small-xs-only
-	{
-		font-size:70%;
-	}
 }
 
 /* Extra Small Devices, Phones */ 
@@ -65,22 +52,6 @@
 	.align-right-md
 	{
 		text-align: right;
-	}
-	.align-right-sm
-	{
-		text-align: right;
-	}
-	.align-right-xs-only
-	{
-		text-align: initial;
-	}
-	.text-gray-xs-only
-	{
-		color:initial;
-	}
-	.small-xs-only
-	{
-		font-size:100%;
 	}
 }
 

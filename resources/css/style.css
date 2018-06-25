@@ -73,14 +73,6 @@
 	min-height: calc(100vh - 101px);
 }
 
-.skin-purple .sidebar-menu>li:hover>a, .skin-purple .sidebar-menu>li.active>a, .skin-purple .sidebar-menu>li.menu-open>a
-{
-	background:#216193 !important;
-}
-.main-sidebar .treeview-menu
-{
-	background:#57aeff !important;
-}
 .my-container
 {
 	background:white;
@@ -445,54 +437,4 @@ input[type="checkbox"].my-cb:checked + span:after
 {
 	z-index: 10;
 	opacity: 1;
-}
-
-.relative
-{
-	position: relative;
-}
-
-.nav-tabs-custom.my-nav-tabs
-{
-	box-shadow: none;
-}
-
-.nav-tabs-custom.my-nav-tabs .tab-content
-{
-	border:1px solid #f1f1f1;
-	border-top:0px;
-}
-.nav-tabs-custom>.nav-tabs>li:first-of-type.active>a
-{
-	border-left-color: #f1f1f1;
-}
-
-.nav-tabs-custom.my-nav-tabs .tab-content .tab-pane
-{
-	min-height:400px;
-}
-
-
-.item-row 
-{
-	padding-top:5px;
-	padding-bottom:5px;
-	border-top:1px solid #f1f1f1;
-	cursor: pointer;
-	transition: all 200ms ease-in-out;
-}
-
-.item-row:hover
-{
-	background:#f1f1f1;
-}
-
-
-.form-control.payroll-input
-{
-	width: 100%;
-	min-width: 60px;
-	height:25px;
-	padding:3px;
-	margin-top:-5px;
 }

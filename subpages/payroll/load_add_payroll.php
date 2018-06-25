@@ -1,10 +1,56 @@
 <?php
 	include('../../includes/module.php');
 
-	getBonusesAndDeductions();
+	$_SESSION['deductions'] = array();
+	$_SESSION['bonuses'] =  array();
+	$index 				= 0;
 
-	$deduction_count = count($_SESSION['deductions']);
-	$bonus_count = count($_SESSION['bonuses']);
+	$getDeductions 		= $con->prepare("SELECT deduction_id,
+												deduction_name,
+												deduction_percent,
+												deduction_amount
+												FROM lib_deductions");
+	$bind 				= $getDeductions->execute();
+	$getDeductions		->store_result();
+	$getDeductions		->bind_result($deduction_id,
+										$deduction_name,
+										$deduction_percent,
+										$deduction_amount);
+	$deduction_count	= $getDeductions->num_rows();
+
+	while($getDeductions->fetch()){
+		$_SESSION['deductions'][$index]['id'] 		= $deduction_id;
+		$_SESSION['deductions'][$index]['name'] 	= $deduction_name;
+		$_SESSION['deductions'][$index]['percent'] 	= $deduction_percent;
+		$_SESSION['deductions'][$index]['amount'] 	= $deduction_amount;
+		$index++;
+	}
+	$getDeductions->close();
+	$index				= 0;
+
+	$getBonuses 		= $con->prepare("SELECT bonus_id,
+												bonus_name,
+												bonus_percent,
+												bonus_amount
+												FROM lib_bonuses");
+	$bind 				= $getBonuses->execute();
+	$getBonuses	        ->store_result();
+	$getBonuses		    ->bind_result($bonus_id,
+										$bonus_name,
+										$bonus_percent,
+										$bonus_amount);
+	$bonus_count		= $getBonuses->num_rows();
+
+	while($getBonuses->fetch()){
+		$_SESSION['bonuses'][$index]['id'] 		= $bonus_id;
+		$_SESSION['bonuses'][$index]['name'] 	= $bonus_name;
+		$_SESSION['bonuses'][$index]['percent'] = $bonus_percent;
+		$_SESSION['bonuses'][$index]['amount'] 	= $bonus_amount;
+		$index++;
+	}
+	$getBonuses->close();
+
+	
 ?>
 
 <div class="row">
@@ -15,10 +61,10 @@
 		<a onclick="load_payroll();" href="javascript:void(0);">
 			<h5 class="pull-right"><i class="fa fa-chevron-left"></i> RETURN TO LIST&emsp;</h5>
 		</a>
-		<a onclick="add_payroll(1);" href="javascript:void(0);">
+		<a onclick="add_project(1);" href="javascript:void(0);">
 			<h5 class="pull-right"><i class="fa fa-folder-open-o"></i> SAVE TO DRAFTS&emsp;|&emsp;</h5>
 		</a>
-		<a onclick="add_payroll(0);" href="javascript:void(0);">
+		<a onclick="add_project(0);" href="javascript:void(0);">
 			<h5 class="pull-right"><i class="fa fa-plus-square-o"></i> GENERATE PAYROLL&emsp;|&emsp;</h5>
 		</a>
 	</div>
@@ -81,14 +127,6 @@
 			<div class="row mt20">
 				<div class="col-xs-12" id="payroll-cont">
 					<div class="table-responsive">
-						<form id="payroll_form" action="../../submits/payroll/add_payroll.php" method="POST">
-						<input type='hidden' name="is_draft" id="is_draft" value="0" />
-						<input type='hidden' name="record_count" id="record_count" value="0" />
-						<input type='hidden' name="all_ids" id="all_ids" value="0" />
-						<input type='hidden' name="checked_ids" id="checked_ids" value="0" />
-						<input type='hidden' name="days_count" id="days_count" value="0" />
-						<input type='hidden' name="payroll_start" id="payroll_start" value="0" />
-						<input type='hidden' name="payroll_end" id="payroll_end" value="0" />
 						<table class="table table-hover table-bordered table-striped">
 							<thead>
 								<tr>
@@ -128,7 +166,7 @@
 									?>
 									<td nowrap>
 										<h5 class="mt15 mb0">
-											<input type="checkbox" style="margin-top:-4px;" class="deduction" name="<?php echo $name.'-checkbox'; ?>" 
+											<input type="checkbox" style="margin-top:-4px;" name="<?php echo $name.'-checkbox'; ?>" 
 											onclick="checkbox_listener(this);"/> <?php echo $_SESSION['deductions'][$i]['name']; ?>
 										</h5>
 									</td>
@@ -139,7 +177,7 @@
 									?>
 									<td nowrap>
 										<h5 class="mt15 mb0">
-											<input type="checkbox" style="margin-top:-4px;" class="bonus" name="<?php echo $name.'-checkbox'; ?>" 
+											<input type="checkbox" style="margin-top:-4px;" name="<?php echo $name.'-checkbox'; ?>" 
 											onclick="checkbox_listener(this);"/> <?php echo $_SESSION['bonuses'][$i]['name']; ?>
 										</h5>
 									</td>
@@ -154,18 +192,147 @@
 								
 							</tbody>
 						</table>
-						</form>
 					</div>
 				</div>
 			</div>
 		</div>
 	</div>
 </div>
-
-<script src="subpages/payroll/js/load_add_payroll.js"></script>
 <script type="text/javascript">
-	var edit_or_draft = 0;
+	var days = 0;
+	var start_index = 5;
+	
+	var weekday = ["SUN","MON","TUES","WED","THU","FRI","SAT"];
+	var curr = new Date; // get current date
+	var first = curr.getDate() - curr.getDay(); // First day is the day of the month - the day of the week
+	var last = first + 6; // last day is the first day + 6
+
+	var firstday = new Date(curr.setDate(first)).toUTCString();
+	var lastday = new Date(curr.setDate(last)).toUTCString();
+
+    $('#search_daterange').daterangepicker({
+		startDate: formatDate(firstday),
+    	endDate: formatDate(lastday)
+	});
+
+	function formatDate(date) {
+		var d = new Date(date),
+			month = '' + (d.getMonth() + 1),
+			day = '' + d.getDate(),
+			year = d.getFullYear();
+
+		if (month.length < 2) month = '0' + month;
+		if (day.length < 2) day = '0' + day;
+
+		return [month, day, year].join('/');
+	}
+
+	function formatDateForPHP(date) {
+		var d = new Date(date),
+			month = '' + (d.getMonth() + 1),
+			day = '' + d.getDate(),
+			year = d.getFullYear();
+
+		if (month.length < 2) month = '0' + month;
+		if (day.length < 2) day = '0' + day;
+
+		return [day, month, year].join('/');
+	}
+
+    function load_employees(start, end)
+	{
+		start = encodeURIComponent(start);
+		end = encodeURIComponent(end);
+		$('#employee-list').load("./subpages/payroll/load_employees.php?start="+start+"&end="+end);
+	}
+
+	function checkbox_listener(element)
+	{
+		var name = $(element).attr('name');
+
+		if($(element).is(":checked"))
+			$("."+name).attr('checked', true);
+		else
+			$("."+name).attr('checked', false);
+	}
+
+	function removeCells(number)
+	{
+		for(var a = 0; a < number; a++)
+		{
+			var row = document.getElementById("headers");
+			row.deleteCell(5);
+		}
+	}
+
+	function addDay(date) {
+		//var dateString = 'Mon Jun 30 2014 00:00:00';
+
+		var startDate = new Date(date);
+
+		// seconds * minutes * hours * milliseconds = 1 day 
+		var day = 60 * 60 * 24 * 1000;
+
+		var result = new Date(startDate.getTime() + day);
+		return result;
+	}	
+
+	function display_days(start, end)
+	{
+		days=0;
+		do
+		{
+			var row = document.getElementById("headers");
+			var x = row.insertCell(start_index+days);
+			x.innerHTML = '<h5 class="mtb0">'+weekday[start.getDay()]+'<br/>'+start.getDate()+'</h5>';
+			start = addDay(start);
+			days++;
+		}
+		while(start < end);
+
+		$('#dates_header').attr('colspan',days);
+	}
+
+	function calculateBasic(id)
+	{
+		var total_minutes = 0;
+		
+		for(var i=1; i<=days; i++)
+		{
+			var minutes = parseFloat(document.getElementById("input_minutes"+id+i).value);
+			total_minutes += minutes;
+		}
+
+		var rate = parseFloat(document.getElementById("input_wage"+id).value);
+		var basic = rate*(total_minutes/60);
+		$('#input_totaltime'+id).val(total_minutes);
+		$('#input_basic'+id).html(basic.formatMoney(2, '.', ','));
+	}
+
+	$('#search_daterange').change(function ()
+	{
+		var start_date = $('#search_daterange').data('daterangepicker').startDate._d;
+		var end_date = $('#search_daterange').data('daterangepicker').endDate._d;
+		
+		// if(days!=0)
+		removeCells(days);
+		
+		display_days(start_date, end_date);
+		//alert(formatDate(start_date));
+		load_employees(formatDateForPHP(start_date), formatDateForPHP(end_date));
+	});
+	
+	Number.prototype.formatMoney = function(c, d, t){
+		var n = this, 
+		c = isNaN(c = Math.abs(c)) ? 2 : c, 
+		d = d == undefined ? "." : d, 
+		t = t == undefined ? "," : t, 
+		s = n < 0 ? "-" : "", 
+		i = String(parseInt(n = Math.abs(Number(n) || 0).toFixed(c))), 
+		j = (j = i.length) > 3 ? j % 3 : 0;
+		return s + (j ? i.substr(0, j) + t : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t) + (c ? d + Math.abs(n - i).toFixed(c).slice(2) : "");
+	};
+	
 	display_days(new Date(curr.setDate(first)), new Date(curr.setDate(last)));
 	load_employees(firstday, lastday);
 </script>
-<script src="subpages/payroll/js/load_add_payroll.js"></script>

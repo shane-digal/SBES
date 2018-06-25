@@ -1,10 +1,9 @@
-<?php
-
-    include 'paths_included.php';
-
+<?php 
+    include "../includes/module.php";
+    include "Db.php";
     $q = (isset($_POST['q']) ? $_POST['q'] : $_GET['q']);
     $isTest = (isset($_GET['test']) ? $_GET['test'] : false);
-
+    $db = new Db();
     $con = $db->connectMySqli();
 
     $response['values'] = "";
