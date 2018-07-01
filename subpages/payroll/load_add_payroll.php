@@ -5,18 +5,18 @@
 	$_SESSION['bonuses'] =  array();
 	$index 				= 0;
 
-	$getDeductions 		= $con->prepare("SELECT deduction_id,
-												deduction_name,
-												deduction_percent,
-												deduction_amount
-												FROM lib_deductions");
-	$bind 				= $getDeductions->execute();
-	$getDeductions		->store_result();
-	$getDeductions		->bind_result($deduction_id,
-										$deduction_name,
-										$deduction_percent,
-										$deduction_amount);
-	$deduction_count	= $getDeductions->num_rows();
+	$getDeductions = $con->prepare("SELECT deduction_id,
+		deduction_name,
+		deduction_percent,
+		deduction_amount
+		FROM lib_deductions");
+	$bind = $getDeductions->execute();
+	$getDeductions->store_result();
+	$getDeductions->bind_result($deduction_id,
+		$deduction_name,
+		$deduction_percent,
+		$deduction_amount);
+	$deduction_count = $getDeductions->num_rows();
 
 	while($getDeductions->fetch()){
 		$_SESSION['deductions'][$index]['id'] 		= $deduction_id;
@@ -26,20 +26,20 @@
 		$index++;
 	}
 	$getDeductions->close();
-	$index				= 0;
+	$index = 0;
 
-	$getBonuses 		= $con->prepare("SELECT bonus_id,
-												bonus_name,
-												bonus_percent,
-												bonus_amount
-												FROM lib_bonuses");
-	$bind 				= $getBonuses->execute();
-	$getBonuses	        ->store_result();
-	$getBonuses		    ->bind_result($bonus_id,
-										$bonus_name,
-										$bonus_percent,
-										$bonus_amount);
-	$bonus_count		= $getBonuses->num_rows();
+	$getBonuses = $con->prepare("SELECT bonus_id,
+		bonus_name,
+		bonus_percent,
+		bonus_amount
+		FROM lib_bonuses");
+	$bind = $getBonuses->execute();
+	$getBonuses->store_result();
+	$getBonuses->bind_result($bonus_id,
+		$bonus_name,
+		$bonus_percent,
+		$bonus_amount);
+	$bonus_count = $getBonuses->num_rows();
 
 	while($getBonuses->fetch()){
 		$_SESSION['bonuses'][$index]['id'] 		= $bonus_id;
@@ -50,7 +50,10 @@
 	}
 	$getBonuses->close();
 
-	
+	$getProjects = $con->prepare("SELECT project_id, project_name FROM rec_projects");
+	$getProjects->execute();
+	$getProjects->bind_result($project_id,
+		$project_name);
 ?>
 
 <div class="row">
@@ -85,6 +88,24 @@
 								<div class="row mt5">
 									<div class="col-xs-12 col-sm-5 col-lg-4">
 										<label class="mtb0">PROJECT:</label>
+									</div>
+									<div class="col-xs-12 col-sm-7 col-lg-8">
+										<select 
+											class="form-control"
+											id="project_id"
+											name="project_id"
+										>
+											<?php while($getProjects->fetch()) { ?>
+											<option value="<?= $project_id ?>"><?php echo $project_name; ?></option>
+											<?php } $getProjects->close(); ?>
+										</select>
+									</div>
+								</div>
+							</div>
+							<div class="col-xs-12 col-md-6 plr5">
+								<div class="row mt5">
+									<div class="col-xs-12 col-sm-5 col-lg-4">
+										<label class="mtb0">PROJECT STATUS:</label>
 									</div>
 									<div class="col-xs-12 col-sm-7 col-lg-8">
 										<select 
@@ -215,6 +236,29 @@
     	endDate: formatDate(lastday)
 	});
 
+	$('#search_status').on('change', function() {
+		var status = $('#search_status').val();
+		$.ajax({
+			url: '../../submits/payroll/filter_projects.php',
+			type: 'POST',
+			data: {project_status: status},
+			datatype: 'json',
+			encode : true
+		})
+		.done(function(data) {
+			data = jQuery.parseJSON(data);
+			if(!data.success) {
+				$('#project_id').empty();
+				if(data.count != 0)
+					for(var i = 0; i < data.count; i++) {
+						$('#project_id').append(data.element[i]);
+					}
+				else
+				$('#project_id').append('<option>No project</option>');
+			}
+		});
+	});
+
 	function formatDate(date) {
 		var d = new Date(date),
 			month = '' + (d.getMonth() + 1),
@@ -239,15 +283,13 @@
 		return [day, month, year].join('/');
 	}
 
-    function load_employees(start, end)
-	{
+    function load_employees(start, end, project) {
 		start = encodeURIComponent(start);
 		end = encodeURIComponent(end);
-		$('#employee-list').load("./subpages/payroll/load_employees.php?start="+start+"&end="+end);
+		$('#employee-list').load("./subpages/payroll/load_employees.php?start="+start+"&end="+end+"&project="+project);
 	}
 
-	function checkbox_listener(element)
-	{
+	function checkbox_listener(element) {
 		var name = $(element).attr('name');
 
 		if($(element).is(":checked"))
@@ -256,8 +298,7 @@
 			$("."+name).attr('checked', false);
 	}
 
-	function removeCells(number)
-	{
+	function removeCells(number) {
 		for(var a = 0; a < number; a++)
 		{
 			var row = document.getElementById("headers");
@@ -309,8 +350,15 @@
 		$('#input_basic'+id).html(basic.formatMoney(2, '.', ','));
 	}
 
-	$('#search_daterange').change(function ()
-	{
+	$('#search_daterange').change(function () {
+		onChangeListener();
+	});
+	
+	$('#project_id').change(function () {
+		onChangeListener();
+	});
+
+	function onChangeListener() {
 		var start_date = $('#search_daterange').data('daterangepicker').startDate._d;
 		var end_date = $('#search_daterange').data('daterangepicker').endDate._d;
 		
@@ -319,9 +367,9 @@
 		
 		display_days(start_date, end_date);
 		//alert(formatDate(start_date));
-		load_employees(formatDateForPHP(start_date), formatDateForPHP(end_date));
-	});
-	
+		load_employees(formatDateForPHP(start_date), formatDateForPHP(end_date), $('#project_id').val());
+	}
+
 	Number.prototype.formatMoney = function(c, d, t){
 		var n = this, 
 		c = isNaN(c = Math.abs(c)) ? 2 : c, 
@@ -334,5 +382,7 @@
 	};
 	
 	display_days(new Date(curr.setDate(first)), new Date(curr.setDate(last)));
-	load_employees(firstday, lastday);
+	var project_id = $('#project_id').val();
+	// console.log(project_id);
+	load_employees(firstday, lastday, project_id);
 </script>

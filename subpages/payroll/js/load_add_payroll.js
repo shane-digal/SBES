@@ -72,11 +72,12 @@ $('#search_daterange').daterangepicker({
 		return [day, month, year].join('/');
 	}
 
-    function load_employees(start, end) {
+    function load_employees(start, end, project_id) {
 		start = encodeURIComponent(start);
 		end = encodeURIComponent(end);
+		console.log(project_id);
 		$('#employee-list').load(
-			"./subpages/payroll/load_employees.php?start="+start+"&end="+end);
+			"./subpages/payroll/load_employees.php?start="+start+"&end="+end+"&project="+project_id);
 	}
 
 	function checkbox_listener(element) {

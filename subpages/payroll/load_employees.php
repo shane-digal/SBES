@@ -2,9 +2,10 @@
 	include('../../includes/module.php');
 	
 	$employees=array();
-	$employee_count=0;
-	$start=$_GET['start'];
-	$end=$_GET['end'];
+	$employee_count = 0;
+	$start = $_GET['start'];
+	$end = $_GET['end'];
+	$project_id = $_GET['project'];
 	
 
 	$start = str_replace('/', '.', $start);
@@ -25,7 +26,9 @@
 								WHERE rec_employees.employee_id IN 
 									(SELECT DISTINCT 
 									employee_id 
-									FROM rec_attendances)");
+									FROM rec_attendances)
+								AND rec_employees.project_id = ?");
+	$getDetails->bind_param("i", $project_id);
 	$getDetails ->execute();
 	$getDetails ->bind_result($id,
 								$fname,
@@ -70,14 +73,15 @@
 		$minutes 		= 0;
 		$ot 			= "OT";
 		$start_text 	= $start . '%';
-		$get_minutes 	= $con->prepare("SELECT TIMESTAMPDIFF(minute , attendance_in ,attendance_out) AS 'Minutes'  FROM rec_attendances WHERE employee_id = ? AND attendance_in LIKE ? AND attendance_remark <> ?");
+		$get_minutes = $con->prepare("SELECT TIMESTAMPDIFF(minute , attendance_in ,attendance_out) AS 'Minutes'  FROM rec_attendances 
+			WHERE employee_id = ? AND attendance_in LIKE ? AND attendance_remark <> ?");
 		$get_minutes 	->bind_param("iss", $employees[$i]['id'], $start_text, $ot);
 		$get_minutes 	->execute();
 		$get_minutes 	->bind_result($minutes_worked);
 		while($get_minutes->fetch())
 		{
 			$minutes 	+= $minutes_worked;
-		}
+		}	
 
 		$get_minutes	->close();
 		$basic_pay 		= ($minutes/60)*$employees[$i]['wage'];

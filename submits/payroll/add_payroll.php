@@ -16,7 +16,7 @@
 	date_add($payroll_end,date_interval_create_from_date_string("1 day"));
 	$checked_ids = explode(",", $_POST["checked_ids"]);
 	$now = date('Y-m-d H:i:s');
-	$project_id = 1;
+	$project_id = $_POST["project_id"];
 	$status = 'Pending';
 	$tables = array();
 	$bonuses = array();
