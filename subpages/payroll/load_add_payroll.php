@@ -3,7 +3,7 @@
 
 	$_SESSION['deductions'] = array();
 	$_SESSION['bonuses'] =  array();
-	$index 				= 0;
+	$index = 0;
 
 	$getDeductions = $con->prepare("SELECT deduction_id,
 		deduction_name,

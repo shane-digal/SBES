@@ -66,31 +66,17 @@
                     <i class="wh40 ion-ios-people-outline"></i> <span>EMPLOYEES</span>
                 </a>
             </li>
+            
+            <li id="li-attendances">
+                <a href="attendances.php">
+                    <i class="wh40 ion-calendar"></i> <span>ATTENDANCES</span>
+                </a>
+            </li>
             <li id="li-settings">
                 <a href="settings.php">
                     <i class="wh40 ion-ios-gear-outline"></i> <span>SETTINGS</span>
                 </a>
             </li>
-            <!-- <li class="treeview">
-                <a href="#">
-                    <i class="fa fa-link"></i> <span>Multilevel</span>
-                    <span class="pull-right-container">
-                        <i class="fa fa-angle-left pull-right"></i>
-                    </span>
-                </a>
-                <ul class="treeview-menu">
-                    <li>
-                        <a href="#">
-                            Link in level 2
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#">
-                            Link in level 2
-                        </a>
-                    </li>
-                </ul>
-            </li> -->
         </ul>
     </section>
 </aside>
